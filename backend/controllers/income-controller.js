@@ -29,7 +29,6 @@ exports.addIncome = async (req, res) => {
 exports.getIncomes = async (req, res) => {
   try {
     const incomes = await schema.find().sort({ createdAt: -1 });
-    console.log(incomes);
     res.status(200).json(incomes);
   } catch (err) {
     res.status(500).json({ message: 'Server error!', error: err });
@@ -38,9 +37,19 @@ exports.getIncomes = async (req, res) => {
 
 exports.deleteIncome = async (req, res) => {
   const { id } = req.params;
-  console.log(req.params);
-  schema
+
+  await schema
     .findByIdAndDelete(id)
     .then((income) => res.status(200).json({ message: 'Income deleted!' }))
-    .catch((err) => res.status(500).json({ message: 'Server error' }));
+    .catch((err) => res.status(500).json({ message: 'Something went wrong' }));
+};
+
+exports.updateIncome = async (req, res) => {
+  const { id } = req.params;
+
+  const updatedContent = { ...req.body };
+  await schema
+    .findByIdAndUpdate(id, updatedContent)
+    .then((data) => res.status(200).json({ message: 'Income updated!' }))
+    .catch((err) => res.status(500).json({ message: 'Something went wrong!' }));
 };
