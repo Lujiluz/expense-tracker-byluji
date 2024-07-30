@@ -59,9 +59,15 @@ exports.getIncomesByFilter = async (req, res) => {
   let filter = {};
 
   if (categoryFilter) filter.category = new RegExp(categoryFilter, 'i');
-  if (belowAmount) filter.amount = { $lte: Number(belowAmount) };
-  if (aboveAmount) filter.amount = { $gte: Number(aboveAmount) };
+  if (belowAmount && aboveAmount) {
+    filter.amount = { $lte: Number(belowAmount), $gte: Number(aboveAmount) };
+  } else if (belowAmount) {
+    filter.amount = { $lte: Number(belowAmount) };
+  } else if (aboveAmount) {
+    filter.amount = { $gte: Number(aboveAmount) };
+  }
   // if (date) filter.createdAt = { $lt: date };
+  console.log(filter);
 
   const incomes = await schema.find(filter);
 
