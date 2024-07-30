@@ -53,3 +53,17 @@ exports.updateIncome = async (req, res) => {
     .then((data) => res.status(200).json({ message: 'Income updated!' }))
     .catch((err) => res.status(500).json({ message: 'Something went wrong!' }));
 };
+
+exports.getIncomesByFilter = async (req, res) => {
+  const { categoryFilter, belowAmount, aboveAmount } = req.body;
+  let filter = {};
+
+  if (categoryFilter) filter.category = new RegExp(categoryFilter, 'i');
+  if (belowAmount) filter.amount = { $lte: Number(belowAmount) };
+  if (aboveAmount) filter.amount = { $gte: Number(aboveAmount) };
+  // if (date) filter.createdAt = { $lt: date };
+
+  const incomes = await schema.find(filter);
+
+  return res.json({ incomes });
+};

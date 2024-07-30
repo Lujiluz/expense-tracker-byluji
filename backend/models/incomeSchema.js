@@ -31,7 +31,8 @@ const incomeSchema = new mongoose.Schema(
       maxLength: 50,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
+  { strictQuery: true }
 );
 
 module.exports = mongoose.model('Income', incomeSchema);
