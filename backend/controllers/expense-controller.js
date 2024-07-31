@@ -53,3 +53,41 @@ exports.updateExpense = async (req, res) => {
     .then((data) => res.status(200).json({ message: 'Expense updated!' }))
     .catch((err) => res.status(500).json({ message: 'Something went wrong!' }));
 };
+
+exports.filterExpenses = async (req, res) => {
+  // list of the top 3 biggest expenses
+  let filter = [
+    {
+      $sort: {
+        amount: -1,
+      },
+    },
+    {
+      $limit: 3,
+    },
+  ];
+
+  const top3BiggestExpenses = await schema.aggregate(filter);
+  // list of the top 3 expenses by category
+  filter = [
+    {
+      $group: {
+        _id: '$category',
+        total: {
+          $sum: '$amount',
+        },
+      },
+    },
+    {
+      $sort: {
+        total: -1,
+      },
+    },
+    {
+      $limit: 3,
+    },
+  ];
+
+  const top3ExpensesByCategory = await schema.aggregate(filter);
+  return res.status(200).json({ top3BiggestExpenses, top3ExpensesByCategory });
+};

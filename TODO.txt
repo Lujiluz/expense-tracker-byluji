@@ -1,3 +1,0 @@
-TODO:   1. Cobain filter by date range
-        2. Pelajari dan cobain aggregation pipeline
-        3. Try to get used to gitlab
